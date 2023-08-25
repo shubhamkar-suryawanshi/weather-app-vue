@@ -1,68 +1,64 @@
 <template>
   <div id="app">
-    <div class="main" v-bind:class="{warm: state_weather}">
+    <div class="main">
       <div class="search-box">
         <input class="search-bar" type="text" placeholder="Search..." v-model="data.city" @keyup.enter="getApi()" />
       </div> 
-      <div v-if="data.weather" class="content">
-        <div class="header">
-        <h1>{{data.weather.name}}</h1>
-          <h3>{{ new Date().toLocaleString() }}</h3>
-        </div>
-        <div class="temp">
-          <h2>{{Math.round(data.weather.main.temp)}}&deg;</h2>
-        </div>
-        <div class="state">
-          <h3>{{ data.weather.weather[0].main}}</h3>
-        </div>
-      </div>
+      <router-link to='/city' class="link-class">
+        <CityDetails :data="data" />
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
 
-import axios from "axios";
+  import axios from "axios";
+  import CityDetails from './CityDetails.vue'
 
-export default {// eslint-disable-next-line
-  name: 'Weather App', 
+  export default {// eslint-disable-next-line
+    name: 'Weather App', 
 
-  data(){
-    return{
-      data:{
-        city:'',
-        weather: null,
-        current_day:'',
-        state_weather:false
+    components:{
+      CityDetails
+    },
+
+    data(){
+      return{
+        data:{
+          city:'',
+          weather: null,
+          current_day:'',
+          state_weather:false
+        }
       }
-    }
-  },
+    },
 
-  mounted: async function(){
-    this.getApi()
-  },
+    mounted: async function(){
+      this.getApi()
+    },
 
-  methods:{
-    async getApi(){
-      if(this.data.city===''){
-        this.data.city = 'Dharwad';
-      }
+    methods:{
+      async getApi(){
+        if(this.data.city===''){
+          this.data.city = 'Dharwad';
+        }
 
-      const getWeather = await axios.get(`https://api.openweathermap.org/data/2.5/weather?units=metric&q=${this.data.city}&appid=261514ec6ead072a338a344dce0fb58f`);
+        const getWeather = await axios.get(`https://api.openweathermap.org/data/2.5/weather?units=metric&q=${this.data.city}&appid=261514ec6ead072a338a344dce0fb58f`);
 
-      // console.log(getWeather);
+        console.log(getWeather);
 
-      this.data.weather = getWeather.data;
-      this.data.city = '';
+        this.data.weather = getWeather.data;
+        this.data.city = '';
 
-      if(this.data.weather.main.temp > 16){
-        this.state_weather = true;
-      }else{
-        this.state_weather = false;
+        if(this.data.weather.main.temp > 16){
+          this.state_weather = true;
+        }else{
+          this.state_weather = false;
+        }
       }
     }
   }
-}
 
 </script>
 
@@ -83,19 +79,12 @@ export default {// eslint-disable-next-line
   .main{
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(to bottom,rgba(18, 75, 156, 0.35),rgba(2, 15, 22, 0.75));
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
     text-align: center;
-  }
-
-  .main.warm{
-    width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(to bottom,rgba(248, 8, 8, 0.35),rgba(246, 6, 6, 0.75));
   }
 
   .search-box .search-bar{
@@ -116,35 +105,7 @@ export default {// eslint-disable-next-line
     background-color: rgba(255, 255, 255, 0.75);
   }
 
-  .content{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .link-class{
+    text-decoration: none;
   }
-
-  .temp{
-  display: inline-block;
-  padding: 10px 25px;
-  color: #FFF;
-  font-size: 6rem;
-  font-weight: 900;
-  text-shadow: 3px 6px rgba(0,0,0,0.25);
-  background-color: rgba(255, 255, 255, 0.25);
-  border-radius: 1rem;
-  box-shadow: 3px 6px rgba(0,0,0,0.25);
-  }
-
-  .header{
-    font-size: 1.25rem;
-    color: azure;
-    box-shadow: rgba(3,3,3, 0.3);
-  }
-
-  .state{
-    color: #FFF;
-    font-size: 3rem;
-    font-style: italic;
-    text-shadow: 3px 6px rgba(0,0,0,0.25);
-  }
-
 </style>

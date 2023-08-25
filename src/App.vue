@@ -1,14 +1,14 @@
 <template>
-  <Weather msg="Welcome to Your Vue.js App"/>
+  <div>
+    <router-view></router-view>
+    
+    
+  </div>
 </template>
 
 <script>
-import Weather from './components/Weather.vue'
 export default {
   name: 'App',
-  components: {
-    Weather
-  }
 }
 </script>
 
